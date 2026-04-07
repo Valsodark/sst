@@ -1,0 +1,5 @@
+{
+  "name": "SSTa Analysis Dashboard",
+  "description": "System for analyzing, visualizing, and predicting Sea Surface Temperature anomalies (SSTa).",
+  "requestFramePermissions": []
+}
