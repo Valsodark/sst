@@ -719,7 +719,6 @@ ${csvData}`;
                             style={{background:'#0a1628',border:'1px solid rgba(0,212,255,0.2)',color:'rgba(0,212,255,0.8)'}}>
                             <option value="prediction">Prediction</option>
                             <option value="actual">Ground Truth</option>
-                            <option value="difference">Error</option>
                           </select>
                           <ChevronDown className="absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 pointer-events-none" style={{color:'rgba(0,212,255,0.5)'}} />
                         </div>
