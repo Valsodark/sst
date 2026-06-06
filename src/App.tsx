@@ -3,7 +3,7 @@ import {
   Play, Pause,
   Map as MapIcon, Activity,
   Settings,
-  Thermometer, AlertTriangle, Info, Loader2, CheckCircle2,
+  AlertTriangle, Info, Loader2, CheckCircle2,
   ChevronDown, Menu, X
 } from 'lucide-react';
 import { format, addDays, parseISO } from 'date-fns';
@@ -14,6 +14,8 @@ import { StatBox as StatBoxComponent } from "./components/StatBox";
 // @ts-ignore
 import h5wasm from 'h5wasm';
 import { calculateBasinMetrics, BasinMetric } from './lib/basinMetrics';
+
+import logo from './logo.svg';
 
 const DIFF_ENTRIES = [
   { color: 'rgb(165,0,38)',   label: '≥ 0.8' },
@@ -581,9 +583,7 @@ ${csvData}`;
 
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="relative w-7 h-7 flex items-center justify-center" style={{border:'1px solid rgba(0,212,255,0.35)',transform:'rotate(45deg)'}}>
-                <Thermometer className="w-3.5 h-3.5" style={{color:'#00d4ff',transform:'rotate(-45deg)'}} />
-              </div>
+              <img src={logo} alt="logo" className="w-7 h-7" />
               <div>
                 <div className="text-sm font-bold tracking-[0.12em]" style={{color:'#d4eaf7'}}>
                   Ocean<span style={{color:'#00d4ff'}}>AI</span>
