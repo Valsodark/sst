@@ -860,7 +860,7 @@ ${csvData}`;
                       <input type="text" value={apiUrl} onChange={e => setApiUrl(e.target.value)}
                         className="w-full px-3 py-2 font-data text-[16px] focus:outline-none"
                         style={{background:'#0a1628',border:'1px solid rgba(0,212,255,0.18)',color:'#d4eaf7'}}
-                        placeholder="http://localhost:8000" required />
+                        placeholder="https://trimuerto-stta-app.hf.space" required />
                     </div>
                     <div>
                       <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// Target Date</label>
