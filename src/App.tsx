@@ -87,7 +87,7 @@ export default function App() {
     setAiSummaryError(null);
   }, [result]);
 
-  console.log('App rendering, timeStep:', timeStep, 'result exists:', !!result);
+  // console.log('App rendering, timeStep:', timeStep, 'result exists:', !!result);
 
   const [openSections, setOpenSections] = useState<Array<'controls' | 'metrics' | 'about'>>(['controls', 'metrics']);
   const [isMobile, setIsMobile] = useState(false);
@@ -298,12 +298,12 @@ ${csvData}`;
 
     try {
       const baseUrl = apiUrl.replace(/\/$/, '');
-      console.log('Fetching data...');
+      // console.log('Fetching data...');
       const response = await fetch(`${baseUrl}/predict?start_date=${targetDate}&model=${selectedModel}`, {
         method: 'GET',
       });
 
-      console.log('Response received, status:', response.status);
+      // console.log('Response received, status:', response.status);
       if (!response.ok) {
         let errorMsg = `Server error: ${response.status}`;
         try {
@@ -316,9 +316,9 @@ ${csvData}`;
         return;
       }
 
-      console.log('Reading array buffer...');
+      // console.log('Reading array buffer...');
       const arrayBuffer = await response.arrayBuffer();
-      console.log('Array buffer read, size:', arrayBuffer.byteLength);
+      // console.log('Array buffer read, size:', arrayBuffer.byteLength);
 
       const header = new Uint8Array(arrayBuffer.slice(0, 8));
       const isHDF5 = header[0] === 0x89 && header[1] === 0x48 && header[2] === 0x44 && header[3] === 0x46;
@@ -332,7 +332,7 @@ ${csvData}`;
         );
       }
 
-      console.log('Parsing NetCDF4...');
+      // console.log('Parsing NetCDF4...');
       // @ts-ignore
       const { FS } = await h5wasm.ready;
       const filepath = '/tmp/pred.nc';
@@ -344,7 +344,7 @@ ${csvData}`;
       // @ts-ignore
       const ncFile = new h5wasm.File(filepath, 'r');
       console.error = origConsoleError;
-      console.log('NetCDF4 parsed successfully');
+      // console.log('NetCDF4 parsed successfully');
 
       try {
         await new Promise(resolve => setTimeout(resolve, 0));
@@ -367,7 +367,7 @@ ${csvData}`;
 
         const hasActualAttr = getAttr('has_actual') === 1;
 
-        console.log('Extracting variables...');
+        // console.log('Extracting variables...');
         console.time('Extract Input');
         const inputData = getFloat32Array('input')!;
         console.timeEnd('Extract Input');
@@ -406,7 +406,7 @@ ${csvData}`;
 
         await new Promise(resolve => setTimeout(resolve, 0));
 
-        console.log('Setting result state...');
+        // console.log('Setting result state...');
         setResult({
           start_date: getAttr('start_date') as string,
           target_date: getAttr('target_date') as string,
@@ -429,7 +429,7 @@ ${csvData}`;
 
         setPredictionView('prediction');
         setTimeStep(10);
-        console.log('Result state set');
+        // console.log('Result state set');
       } finally {
         ncFile.close();
         try { FS.unlink(filepath); } catch {}
@@ -439,7 +439,7 @@ ${csvData}`;
       setError(err instanceof Error ? err.message : 'An unknown error occurred.');
     } finally {
       setIsLoading(false);
-      console.log('handlePredict finished');
+      // console.log('handlePredict finished');
     }
   };
 
@@ -859,7 +859,7 @@ ${csvData}`;
                       <input type="text" value={apiUrl} onChange={e => setApiUrl(e.target.value)}
                         className="w-full px-3 py-2 font-data text-[16px] focus:outline-none"
                         style={{background:'#0a1628',border:'1px solid rgba(0,212,255,0.18)',color:'#d4eaf7'}}
-                        placeholder="https://trimuerto-stta-app.hf.space" required />
+                        placeholder="https://trimuerto-stta-app.hf.space" required disabled />
                     </div>
                     <div>
                       <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// Target Date</label>
