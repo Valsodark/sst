@@ -1,1 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
 @import "tailwindcss";
+
+:root {
+  --ocean-black: #040c14;
+  --ocean-deep: #060f1c;
+  --ocean-mid: #0a1628;
+  --ocean-surface: #0f1f38;
+  --cyan: #00d4ff;
+  --cyan-dim: rgba(0, 212, 255, 0.12);
+  --cyan-glow: rgba(0, 212, 255, 0.35);
+  --indigo-accent: #818cf8;
+  --emerald-accent: #34d399;
+  --rose-accent: #fb7185;
+  --amber-accent: #fbbf24;
+  --data-white: #d4eaf7;
+  --text-muted: rgba(120, 180, 220, 0.45);
+}
+
+html, body {
+  background-color: var(--ocean-black);
+  color: var(--data-white);
+  font-family: 'Chakra Petch', sans-serif;
+}
+
+/* Keep the SST canvas pixelated while zoomed.
+   react-zoom-pan-pinch scales a composited layer, which the GPU otherwise
+   upscales with bilinear smoothing (blurry). Forcing pixelated rendering on
+   the transform wrapper + component makes the layer scale crisply. */
+.react-transform-wrapper,
+.react-transform-component,
+.react-transform-component canvas {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+/* Subtle scanline overlay for CRT / instrument feel */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.04) 3px,
+    rgba(0, 0, 0, 0.04) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Mobile drawer + overlay: size to the *visible* viewport so they always reach
+   the bottom of the screen. Plain 100vh/h-full track the larger layout viewport,
+   which leaves a gap at the bottom when the browser toolbar is shown — revealing
+   the content behind the drawer. dvh tracks the dynamic (visible) viewport.
+   Scoped below the lg breakpoint so the panel stays auto-height on desktop. */
+@media (max-width: 1023px) {
+  .drawer-fill {
+    height: 100vh;      /* fallback for browsers without dvh */
+    height: 100dvh;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0, 212, 255, 0.18); }
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 212, 255, 0.35); }
+
+/* Sonar ping animation */
+@keyframes sonar-ping {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Spin */
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+/* Blink cursor */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Fade slide in */
+@keyframes data-appear {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Glow pulse */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(0, 212, 255, 0.2); }
+  50% { box-shadow: 0 0 18px rgba(0, 212, 255, 0.5); }
+}
+
+.font-data {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.instrument-glow {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+input[type="date"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+select {
+  color: var(--data-white);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Range input styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 2px;
+  background: rgba(0, 212, 255, 0.12);
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #00d4ff;
+  border: none;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #5ee7ff;
+}

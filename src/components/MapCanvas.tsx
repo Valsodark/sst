@@ -149,11 +149,11 @@ export const SstaLegend = ({ minTemp = -2, maxTemp = 2, horizontal = false }: { 
   }
 
   return (
-      <div className={`bg-zinc-900/80 border border-zinc-800/80 p-2 rounded-lg text-[12px] font-mono text-zinc-300 flex ${horizontal ? 'flex-row items-center justify-center gap-4 w-auto flex-wrap max-w-full' : 'flex-col justify-center gap-1.5 shrink-0 w-[110px]'}`}>
-        <div className={`text-zinc-400 font-semibold text-center ${horizontal ? 'pr-3 border-r border-zinc-800' : 'mb-1 border-b border-zinc-800 pb-1'}`}>SSTa (°C)</div>
+      <div className={`bg-[#060f1c] border border-[#00d4ff]/12 p-2 font-data text-[16px] tracking-wider flex ${horizontal ? 'flex-row items-center justify-center gap-3 w-auto flex-wrap max-w-full' : 'flex-col justify-center gap-1 shrink-0 w-[100px]'}`}>
+        <div className={`text-[#00d4ff]/40 uppercase text-center text-[12px] ${horizontal ? 'pr-2 border-r border-[#00d4ff]/15' : 'mb-1 border-b border-[#00d4ff]/15 pb-1'}`}>SSTa (°C)</div>
         {steps.map((step, i) => (
-            <div key={i} className="flex items-center gap-2 whitespace-nowrap">
-              <span className="w-2.5 h-2.5 rounded-sm shadow-sm shrink-0" style={{backgroundColor: step.color}}></span>
+            <div key={i} className="flex items-center gap-1.5 whitespace-nowrap text-[#a8c8e8]/60">
+              <span className="w-2 h-2 shrink-0" style={{backgroundColor: step.color}}></span>
               {step.val > 0 ? '+' : ''}{step.val.toFixed(1)}
             </div>
         ))}
@@ -282,38 +282,38 @@ const DetailedViewBox = ({ selectedPoint, cmap, onClose, containerRef }: { selec
 
   return (
       <div
-          className="absolute w-48 bg-zinc-900/95 border border-zinc-700 rounded-lg shadow-2xl p-3 z-50 backdrop-blur-sm animate-in fade-in slide-in-from-bottom-4 zoom-in-95 duration-300 ease-out"
+          className="absolute w-48 bg-[#060f1c]/95 border border-[#00d4ff]/20 shadow-2xl p-3 z-50 backdrop-blur-sm animate-in fade-in slide-in-from-bottom-4 zoom-in-95 duration-300 ease-out"
           style={{ left, top }}
       >
-        <div className="flex justify-between items-center mb-2 border-b border-zinc-700/80 pb-2">
-          <h3 className="text-xs font-semibold text-zinc-200">Area Info</h3>
-          <button onClick={onClose} className="text-zinc-400 hover:text-white pointer-events-auto">
+        <div className="flex justify-between items-center mb-2 border-b border-[#00d4ff]/15 pb-2">
+          <h3 className="font-data text-[16px] tracking-[0.2em] uppercase text-[#00d4ff]/70">Area Info</h3>
+          <button onClick={onClose} className="text-[#00d4ff]/40 hover:text-[#00d4ff] pointer-events-auto">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
-        <div className="space-y-2 text-[10px] font-mono">
+        <div className="space-y-2 text-[16px] font-data">
           <div className="flex justify-between">
-            <span className="text-zinc-400">Center Lat:</span>
-            <span className="text-zinc-200">{selectedPoint.lat}°</span>
+            <span className="text-[#00d4ff]/40">Center Lat:</span>
+            <span className="text-[#a8c8e8]">{selectedPoint.lat}°</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-400">Center Lon:</span>
-            <span className="text-zinc-200">{selectedPoint.lon}°</span>
+            <span className="text-[#00d4ff]/40">Center Lon:</span>
+            <span className="text-[#a8c8e8]">{selectedPoint.lon}°</span>
           </div>
-          <div className="flex justify-between mt-2 pt-2 border-t border-zinc-800">
-            <span className="text-zinc-400">{cmap === 'difference' ? 'Max Error:' : 'Max:'}</span>
+          <div className="flex justify-between mt-2 pt-2 border-t border-[#00d4ff]/10">
+            <span className="text-[#00d4ff]/40">{cmap === 'difference' ? 'Max Error:' : 'Max:'}</span>
             <span className="text-rose-400">{selectedPoint.max.toFixed(2)} °C</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-400">{cmap === 'difference' ? 'Avg Error:' : 'Avg:'}</span>
-            <span className="text-zinc-200">{selectedPoint.avg.toFixed(2)} °C</span>
+            <span className="text-[#00d4ff]/40">{cmap === 'difference' ? 'Avg Error:' : 'Avg:'}</span>
+            <span className="text-[#a8c8e8]">{selectedPoint.avg.toFixed(2)} °C</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-400">Std Dev:</span>
-            <span className="text-zinc-200">{selectedPoint.stdDev.toFixed(2)} °C</span>
+            <span className="text-[#00d4ff]/40">Std Dev:</span>
+            <span className="text-[#a8c8e8]">{selectedPoint.stdDev.toFixed(2)} °C</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-400">{cmap === 'difference' ? 'Min Error:' : 'Min:'}</span>
+            <span className="text-[#00d4ff]/40">{cmap === 'difference' ? 'Min Error:' : 'Min:'}</span>
             <span className="text-blue-400">{selectedPoint.min.toFixed(2)} °C</span>
           </div>
         </div>
@@ -351,7 +351,11 @@ export const MapCanvas = React.memo(function MapCanvas({ data, width, height, fl
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !data || width === 0 || height === 0) return;
-    const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+    // NOTE: no `desynchronized: true` here. That low-latency hint routes the
+    // canvas through a separate hardware overlay on Chrome/Windows, which
+    // upscales with linear filtering and ignores image-rendering:pixelated,
+    // making the map look blurry.
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     let maxAbs = 0.1;
@@ -799,7 +803,7 @@ export const MapCanvas = React.memo(function MapCanvas({ data, width, height, fl
     }
   };
 
-  if (!data) return <div className="w-full h-full flex items-center justify-center text-zinc-600 text-xs">No data</div>;
+  if (!data) return <div className="w-full h-full flex items-center justify-center text-zinc-600 text-[16px]">No data</div>;
 
   const renderCanvasContent = () => (
       <>
@@ -812,6 +816,13 @@ export const MapCanvas = React.memo(function MapCanvas({ data, width, height, fl
             onClick={handleCanvasClick}
         />
 
+        {/* Selection Circle.
+            The <svg> is always rendered (not just when a point is selected) so it
+            shares the canvas's transform layer. This forces Chrome to paint the
+            canvas into the parent layer at full display resolution with the
+            canvas's image-rendering:pixelated honored, instead of bilinear-scaling
+            a cached low-res texture (which made the map look blurry until the
+            detail view was opened). */}
         {/* Selection Circle */}
         {selectedPoint && (
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
