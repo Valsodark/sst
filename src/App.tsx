@@ -31,7 +31,7 @@ const DIFF_ENTRIES = [
 ];
 
 const DiffLegend = ({ horizontal = false }: { horizontal?: boolean }) => (
-  <div className={`bg-[#060f1c] border border-[#00d4ff]/12 p-2 font-data text-[16px] tracking-wider flex ${horizontal ? 'flex-row items-center justify-center gap-3 w-auto flex-wrap max-w-full' : 'flex-col justify-center gap-1 shrink-0 w-[100px]'}`}>
+  <div className={`bg-[#09162a] border border-[#00d4ff]/12 p-2 font-data text-[16px] tracking-wider flex ${horizontal ? 'flex-row items-center justify-center gap-3 w-auto flex-wrap max-w-full' : 'flex-col justify-center gap-1 shrink-0 w-[100px]'}`}>
     <div className={`text-[#00d4ff]/40 uppercase text-center ${horizontal ? 'pr-2 border-r border-[#00d4ff]/15' : 'mb-1 border-b border-[#00d4ff]/15 pb-1'}`}>Error</div>
     {DIFF_ENTRIES.map(({ color, label }) => (
       <div key={label} className="flex items-center gap-1.5 whitespace-nowrap text-[#a8c8e8]/60">
