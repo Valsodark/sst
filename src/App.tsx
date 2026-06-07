@@ -645,7 +645,7 @@ ${csvData}`;
                     <div className="w-1 h-4" style={{background:'rgba(0,212,255,0.15)'}} />
                   </div>
                   <span className="font-data text-[11px] lg:text-[16px] tracking-[0.22em] uppercase" style={{color:'rgba(0,212,255,0.65)'}}>
-                    Primary Sensor Feed
+                    View Forecasted SSTAs
                   </span>
                 </div>
                 {result && (
@@ -687,8 +687,8 @@ ${csvData}`;
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="font-data text-[16px] tracking-[0.25em] uppercase" style={{color:'rgba(0,212,255,0.3)'}}>Awaiting Mission Parameters</div>
-                      <div className="font-data text-[16px] mt-1" style={{color:'rgba(0,212,255,0.15)'}}>Configure endpoint and execute prediction</div>
+                      <div className="font-data text-[16px] tracking-[0.25em] uppercase" style={{color:'rgba(0,212,255,0.3)'}}>Awaiting Parameters</div>
+                      <div className="font-data text-[16px] mt-1" style={{color:'rgba(0,212,255,0.15)'}}>Configure date and model then execute prediction</div>
                     </div>
                   </div>
                 ) : currentMap ? (
@@ -847,7 +847,7 @@ ${csvData}`;
                 style={{borderBottom:'1px solid rgba(0,212,255,0.1)',background:'rgba(4,12,20,0.6)'}}>
                 <div className="flex items-center gap-2.5">
                   <Settings className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.5)'}} />
-                  <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>Mission Parameters</span>
+                  <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>Parameters</span>
                 </div>
                 <ChevronDown className={`w-4 h-4 transition-transform ${openSections.includes('controls') ? 'rotate-180' : ''}`} style={{color:'rgba(0,212,255,0.35)'}} />
               </button>
