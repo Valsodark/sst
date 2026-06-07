@@ -734,7 +734,7 @@ ${csvData}`;
                         <div className="absolute top-2 right-2 w-4 h-4 pointer-events-none z-10" style={{borderTop:'1px solid rgba(0,212,255,0.45)',borderRight:'1px solid rgba(0,212,255,0.45)'}} />
                         <div className="absolute bottom-2 left-2 w-4 h-4 pointer-events-none z-10" style={{borderBottom:'1px solid rgba(0,212,255,0.45)',borderLeft:'1px solid rgba(0,212,255,0.45)'}} />
                         <div className="absolute bottom-2 right-2 w-4 h-4 pointer-events-none z-10" style={{borderBottom:'1px solid rgba(0,212,255,0.45)',borderRight:'1px solid rgba(0,212,255,0.45)'}} />
-                        <div className="absolute top-3 left-6 font-data text-[10px] lg:text-[16px] tracking-widest uppercase pointer-events-none z-10" style={{color:'rgba(0,212,255,0.3)'}}>
+                        <div className="absolute top-3 left-6 font-data text-[10px] lg:text-[16px] tracking-widest uppercase pointer-events-none z-10" style={{color:'rgba(0,212,255,0.75)',textShadow:'1px 1px 1px rgba(0,0,0,0.9)'}}>
                           {timeStep < 10 ? `IN-D${String(timeStep+1).padStart(2,'0')}` : predictionView.slice(0,4).toUpperCase()}
                         </div>
                         {(!result.actual && timeStep === 10 && predictionView === 'actual') || (!result.difference && timeStep === 10 && predictionView === 'difference') ? (

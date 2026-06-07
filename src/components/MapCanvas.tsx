@@ -858,7 +858,7 @@ export const MapCanvas = React.memo(function MapCanvas({ data, width, height, fl
         )}
 
         {onClick && (
-            <div className="absolute top-2 right-2 bg-black/50 text-white p-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none backdrop-blur-sm border border-white/10">
+            <div className="absolute top-2 right-2 p-1.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style={{color:'rgba(0,212,255,0.75)',background:'rgba(0,0,0,0.5)',border:'1px solid rgba(0,212,255,0.45)',backdropFilter:'blur(4px)',textShadow:'1px 1px 1px rgba(0,0,0,0.9)'}}>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
             </div>
         )}
