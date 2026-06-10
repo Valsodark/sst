@@ -21,12 +21,9 @@ html, body {
   background-color: var(--ocean-black);
   color: var(--data-white);
   font-family: 'Chakra Petch', sans-serif;
+  overscroll-behavior: none;
 }
 
-/* Keep the SST canvas pixelated while zoomed.
-   react-zoom-pan-pinch scales a composited layer, which the GPU otherwise
-   upscales with bilinear smoothing (blurry). Forcing pixelated rendering on
-   the transform wrapper + component makes the layer scale crisply. */
 .react-transform-wrapper,
 .react-transform-component,
 .react-transform-component canvas {
@@ -35,7 +32,6 @@ html, body {
   image-rendering: pixelated;
 }
 
-/* Subtle scanline overlay for CRT / instrument feel */
 body::after {
   content: '';
   position: fixed;
@@ -48,19 +44,9 @@ body::after {
     rgba(0, 0, 0, 0.04) 4px
   );
   pointer-events: none;
-  z-index: 9998;
-}
-
-/* Mobile drawer + overlay: size to the *visible* viewport so they always reach
-   the bottom of the screen. Plain 100vh/h-full track the larger layout viewport,
-   which leaves a gap at the bottom when the browser toolbar is shown — revealing
-   the content behind the drawer. dvh tracks the dynamic (visible) viewport.
-   Scoped below the lg breakpoint so the panel stays auto-height on desktop. */
-@media (max-width: 1023px) {
-  .drawer-fill {
-    height: 100vh;      /* fallback for browsers without dvh */
-    height: 100dvh;
-  }
+  z-index: 4;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 /* Custom scrollbar */

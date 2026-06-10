@@ -7,7 +7,6 @@ import {
   ChevronDown, Menu, X
 } from 'lucide-react';
 import { format, addDays, parseISO } from 'date-fns';
-import { cn } from './lib/utils';
 import { MapCanvas, SstaLegend } from './components/MapCanvas';
 import { DatePicker } from './components/DatePicker';
 import { StatBox as StatBoxComponent } from "./components/StatBox";
@@ -78,7 +77,9 @@ export default function App() {
   const [suppressNextMainAnimation, setSuppressNextMainAnimation] = useState(false);
   const [timelineData, setTimelineData] = useState<Float32Array | null>(null);
   const [timelineDataVersion, setTimelineDataVersion] = useState(0);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isConfigOpen, setIsConfigOpen] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth < 1024
+  );
   const [aiSummaryLoading, setAiSummaryLoading] = useState(false);
   const [aiSummaryError, setAiSummaryError] = useState<string | null>(null);
   const [aiSummaryText, setAiSummaryText] = useState<string | null>(null);
@@ -107,13 +108,13 @@ export default function App() {
     return () => mq.removeEventListener('change', update);
   }, []);
 
-  // Lock background scroll while the mobile drawer is open
+  // Lock background scroll while the config modal is open on mobile.
   useEffect(() => {
-    if (!isMobileMenuOpen) return;
+    if (!isConfigOpen || !isMobile) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = prev; };
-  }, [isMobileMenuOpen]);
+  }, [isConfigOpen, isMobile]);
 
   const toggleSection = (section: 'controls' | 'metrics' | 'about') => {
     setOpenSections(prev => {
@@ -431,6 +432,7 @@ ${csvData}`;
 
         setPredictionView('prediction');
         setTimeStep(10);
+        setIsConfigOpen(false); // close the config modal to reveal the maps
         // console.log('Result state set');
       } finally {
         ncFile.close();
@@ -574,11 +576,140 @@ ${csvData}`;
     return null;
   }, [fullScreenMap, result, currentMap]);
 
+  // Shared instrument-panel content, rendered both as the desktop side column
+  // and inside the mobile config modal.
+  const panelSections = (
+    <>
+      {/* MISSION PARAMETERS */}
+      <div className="overflow-hidden" style={{background:'#060f1c',border:'1px solid rgba(0,212,255,0.12)'}}>
+        <button onClick={() => toggleSection('controls')} className="w-full px-4 py-3 flex items-center justify-between transition-colors"
+          style={{borderBottom:'1px solid rgba(0,212,255,0.1)',background:'#08111e'}}>
+          <div className="flex items-center gap-2.5">
+            <Settings className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.5)'}} />
+            <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>Parameters</span>
+          </div>
+          <ChevronDown className={`w-4 h-4 transition-transform ${openSections.includes('controls') ? 'rotate-180' : ''}`} style={{color:'rgba(0,212,255,0.35)'}} />
+        </button>
+        {openSections.includes('controls') && (
+          <div className="p-4">
+            <form onSubmit={handlePredict} className="space-y-4">
+              <div>
+                <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// API Endpoint</label>
+                <input type="text" value={apiUrl} onChange={e => setApiUrl(e.target.value)}
+                  className="w-full px-3 py-2 font-data text-[16px] focus:outline-none"
+                  style={{background:'#0a1628',border:'1px solid rgba(0,212,255,0.18)',color:'#d4eaf7'}}
+                  placeholder="https://trimuerto-stta-app.hf.space" required disabled />
+              </div>
+              <div>
+                <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// Target Date</label>
+                <DatePicker value={targetDate} onChange={setTargetDate} min="2026-03-04" max="2026-03-18" />
+              </div>
+              <div>
+                <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// Neural Model</label>
+                <div className="relative">
+                  <select value={selectedModel} onChange={e => setSelectedModel(e.target.value)}
+                    className="w-full pl-3 pr-9 py-2 font-data text-[16px] focus:outline-none"
+                    style={{background:'#0a1628',border:'1px solid rgba(0,212,255,0.18)',color:'#d4eaf7'}}>
+                    <option value="best_sst_convlstm.keras">Best Weights</option>
+                    <option value="final_sst_convlstm.keras">Final Weights</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none" style={{color:'rgba(0,212,255,0.4)'}} />
+                </div>
+              </div>
+              <button type="submit" disabled={isLoading}
+                className="w-full py-2.5 font-data text-[16px] tracking-[0.22em] uppercase transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{background:'rgba(0,212,255,0.08)',border:'1px solid rgba(0,212,255,0.28)',color:'#00d4ff'}}>
+                {isLoading
+                  ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Processing...</>
+                  : <><Play className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.6)'}} /> Execute Prediction</>}
+              </button>
+            </form>
+            {error && (
+              <div className="mt-4 p-3 flex items-start gap-2 font-data text-[16px]" style={{background:'rgba(251,113,133,0.05)',border:'1px solid rgba(251,113,133,0.2)',color:'#fb7185'}}>
+                <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                <span>{error}</span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* ANALYSIS RESULTS */}
+      {result && (
+        <div className="overflow-hidden" style={{background:'#060f1c',border:'1px solid rgba(0,212,255,0.12)'}}>
+          <button onClick={() => toggleSection('metrics')} className="w-full px-4 py-3 flex items-center justify-between transition-colors"
+            style={{borderBottom:'1px solid rgba(0,212,255,0.1)',background:'#08111e'}}>
+            <div className="flex items-center gap-2.5">
+              <Activity className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.5)'}} />
+              <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>Analysis Results</span>
+            </div>
+            <ChevronDown className={`w-4 h-4 transition-transform ${openSections.includes('metrics') ? 'rotate-180' : ''}`} style={{color:'rgba(0,212,255,0.35)'}} />
+          </button>
+          {openSections.includes('metrics') && (
+            <div className="p-4 flex flex-col gap-3">
+              <div className="flex items-start gap-2 p-3 font-data text-[16px]" style={{background:'rgba(52,211,153,0.05)',border:'1px solid rgba(52,211,153,0.18)',color:'#34d399'}}>
+                <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                <span>{result.message}</span>
+              </div>
+              {result.mse !== null && (
+                <div className="grid grid-cols-2 gap-2">
+                  <StatBoxComponent label="MSE" value={result.mse.toFixed(4)} subtext="Mean Squared Error" color="text-[#fbbf24]" />
+                  <StatBoxComponent label="Status" value="Success" color="text-[#34d399]" />
+                </div>
+              )}
+              <button onClick={handleOpenSummary} disabled={aiSummaryLoading || !timelineData}
+                className="w-full py-2.5 font-data text-[16px] tracking-[0.18em] uppercase transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{background:'rgba(129,140,248,0.08)',border:'1px solid rgba(129,140,248,0.25)',color:'#818cf8'}}>
+                {aiSummaryLoading
+                  ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Generating...</>
+                  : aiSummaryText
+                    ? <><Activity className="w-3.5 h-3.5" /> View AI Summary</>
+                    : <><Activity className="w-3.5 h-3.5" /> Generate AI Summary</>}
+              </button>
+              <p className="font-data text-[11px] lg:text-[13px] tracking-[0.12em] text-center" style={{color:'rgba(129,140,248,0.4)'}}>
+                Optional · powered by Puter AI · sign-in required
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* SYSTEM INFO */}
+      <div className="overflow-hidden" style={{background:'#060f1c',border:'1px solid rgba(0,212,255,0.12)'}}>
+        <button onClick={() => toggleSection('about')} className="w-full px-4 py-3 flex items-center justify-between transition-colors"
+          style={{borderBottom:'1px solid rgba(0,212,255,0.1)',background:'#08111e'}}>
+          <div className="flex items-center gap-2.5">
+            <Info className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.5)'}} />
+            <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>System Info</span>
+          </div>
+          <ChevronDown className={`w-4 h-4 transition-transform ${openSections.includes('about') ? 'rotate-180' : ''}`} style={{color:'rgba(0,212,255,0.35)'}} />
+        </button>
+        {openSections.includes('about') && (
+          <div className="p-4 space-y-3 font-data text-[16px] leading-relaxed" style={{color:'rgba(0,212,255,0.4)'}}>
+            <p>ConvLSTM neural network trained on global Sea Surface Temperature Anomaly (SSTa) data. Ingests 10 prior days and outputs the predicted anomaly map for the target date.</p>
+            <div className="pt-3" style={{borderTop:'1px solid rgba(0,212,255,0.1)'}}>
+              <div className="mb-1" style={{color:'rgba(0,212,255,0.55)'}}>// Error Map Key</div>
+              <p>Positive (red) → over-predicted. Negative (blue) → under-predicted. Near-zero (white) → high accuracy.</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+
   return (
-      <div className="min-h-screen flex flex-col" style={{background:'var(--ocean-black)',color:'var(--data-white)',fontFamily:"'Chakra Petch',sans-serif"}}>
+      <div className="flex flex-col" style={{minHeight:'100svh',background:'var(--ocean-black)',color:'var(--data-white)',fontFamily:"'Chakra Petch',sans-serif"}}>
 
         {/* ── HEADER ─────────────────────────────────────────────── */}
-        <header className="sticky top-0 z-20 border-b" style={{background:'rgba(4,12,20,0.92)',borderColor:'rgba(0,212,255,0.1)',backdropFilter:'blur(12px)'}}>
+        <header className="sticky top-0 z-20 border-b" style={{
+            background:'#040c14',
+            borderColor:'rgba(0,212,255,0.1)',
+            paddingTop:'env(safe-area-inset-top)',
+            paddingLeft:'env(safe-area-inset-left)',
+            paddingRight:'env(safe-area-inset-right)',
+            backdropFilter:'saturate(100%)',
+            WebkitBackdropFilter:'saturate(100%)',
+          }}>
           <div className="max-w-[1400px] mx-auto px-4 h-12 flex items-center justify-between">
 
             {/* Logo */}
@@ -619,7 +750,7 @@ ${csvData}`;
                 }} />
                 {isLoading ? 'Processing' : result ? 'Model Active' : 'Standby'}
               </div>
-              <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden p-2 transition-colors"
+              <button onClick={() => setIsConfigOpen(true)} className="lg:hidden p-2 transition-colors"
                 style={{border:'1px solid rgba(0,212,255,0.2)',color:'rgba(0,212,255,0.5)'}}>
                 <Menu className="w-4 h-4" />
               </button>
@@ -632,6 +763,7 @@ ${csvData}`;
 
           {/* ── LEFT: MAP COLUMN ──────────────────────────────────── */}
           <div className="lg:col-span-8 flex flex-col gap-3 pb-20 lg:pb-0">
+
 
             {/* PRIMARY SENSOR FEED */}
             <div className="flex flex-col overflow-hidden" style={{background:'#060f1c',border:'1px solid rgba(0,212,255,0.12)',minHeight:'520px'}}>
@@ -821,141 +953,49 @@ ${csvData}`;
             )}
           </div>
 
-          {/* ── RIGHT: INSTRUMENT PANEL ───────────────────────────── */}
-          {isMobileMenuOpen && (
-            <div className="fixed top-0 left-0 right-0 drawer-fill bg-black/70 z-40 lg:hidden" style={{backdropFilter:'blur(4px)'}} onClick={() => setIsMobileMenuOpen(false)} />
-          )}
-
-          <div className={cn(
-            "flex flex-col gap-3 transition-transform duration-300 ease-in-out",
-            "lg:col-span-4 lg:relative lg:inset-auto lg:translate-x-0 lg:z-0 lg:w-auto lg:max-w-none lg:h-auto lg:p-0 lg:border-none lg:flex",
-            "fixed top-0 right-0 z-50 w-[90vw] max-w-[340px] drawer-fill p-4 overflow-y-auto",
-            isMobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"
-          )} style={{background: isMobileMenuOpen ? '#040c14' : 'transparent', borderLeft: isMobileMenuOpen ? '1px solid rgba(0,212,255,0.12)' : 'none'}}>
-
-            {/* Mobile top row */}
-            <div className="flex items-center justify-between lg:hidden mb-3 pb-3" style={{borderBottom:'1px solid rgba(0,212,255,0.1)'}}>
-              <span className="font-data text-[16px] tracking-[0.22em] uppercase" style={{color:'rgba(0,212,255,0.5)'}}>Mission Control</span>
-              <button onClick={() => setIsMobileMenuOpen(false)} className="p-1.5 transition-colors" style={{border:'1px solid rgba(0,212,255,0.2)',color:'rgba(0,212,255,0.5)'}}>
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* MISSION PARAMETERS */}
-            <div className="overflow-hidden" style={{background:'#060f1c',border:'1px solid rgba(0,212,255,0.12)'}}>
-              <button onClick={() => toggleSection('controls')} className="w-full px-4 py-3 flex items-center justify-between transition-colors"
-                style={{borderBottom:'1px solid rgba(0,212,255,0.1)',background:'rgba(4,12,20,0.6)'}}>
-                <div className="flex items-center gap-2.5">
-                  <Settings className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.5)'}} />
-                  <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>Parameters</span>
-                </div>
-                <ChevronDown className={`w-4 h-4 transition-transform ${openSections.includes('controls') ? 'rotate-180' : ''}`} style={{color:'rgba(0,212,255,0.35)'}} />
-              </button>
-              {openSections.includes('controls') && (
-                <div className="p-4">
-                  <form onSubmit={handlePredict} className="space-y-4">
-                    <div>
-                      <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// API Endpoint</label>
-                      <input type="text" value={apiUrl} onChange={e => setApiUrl(e.target.value)}
-                        className="w-full px-3 py-2 font-data text-[16px] focus:outline-none"
-                        style={{background:'#0a1628',border:'1px solid rgba(0,212,255,0.18)',color:'#d4eaf7'}}
-                        placeholder="https://trimuerto-stta-app.hf.space" required disabled />
-                    </div>
-                    <div>
-                      <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// Target Date</label>
-                      <DatePicker value={targetDate} onChange={setTargetDate} min="2026-03-04" max="2026-03-18" />
-                    </div>
-                    <div>
-                      <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// Neural Model</label>
-                      <div className="relative">
-                        <select value={selectedModel} onChange={e => setSelectedModel(e.target.value)}
-                          className="w-full pl-3 pr-9 py-2 font-data text-[16px] focus:outline-none"
-                          style={{background:'#0a1628',border:'1px solid rgba(0,212,255,0.18)',color:'#d4eaf7'}}>
-                          <option value="best_sst_convlstm.keras">Best Weights</option>
-                          <option value="final_sst_convlstm.keras">Final Weights</option>
-                        </select>
-                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none" style={{color:'rgba(0,212,255,0.4)'}} />
-                      </div>
-                    </div>
-                    <button type="submit" disabled={isLoading}
-                      className="w-full py-2.5 font-data text-[16px] tracking-[0.22em] uppercase transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
-                      style={{background:'rgba(0,212,255,0.08)',border:'1px solid rgba(0,212,255,0.28)',color:'#00d4ff'}}>
-                      {isLoading
-                        ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Processing...</>
-                        : <><Play className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.6)'}} /> Execute Prediction</>}
-                    </button>
-                  </form>
-                  {error && (
-                    <div className="mt-4 p-3 flex items-start gap-2 font-data text-[16px]" style={{background:'rgba(251,113,133,0.05)',border:'1px solid rgba(251,113,133,0.2)',color:'#fb7185'}}>
-                      <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                      <span>{error}</span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* ANALYSIS RESULTS */}
-            {result && (
-              <div className="overflow-hidden" style={{background:'#060f1c',border:'1px solid rgba(0,212,255,0.12)'}}>
-                <button onClick={() => toggleSection('metrics')} className="w-full px-4 py-3 flex items-center justify-between transition-colors"
-                  style={{borderBottom:'1px solid rgba(0,212,255,0.1)',background:'rgba(4,12,20,0.6)'}}>
-                  <div className="flex items-center gap-2.5">
-                    <Activity className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.5)'}} />
-                    <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>Analysis Results</span>
-                  </div>
-                  <ChevronDown className={`w-4 h-4 transition-transform ${openSections.includes('metrics') ? 'rotate-180' : ''}`} style={{color:'rgba(0,212,255,0.35)'}} />
-                </button>
-                {openSections.includes('metrics') && (
-                  <div className="p-4 flex flex-col gap-3">
-                    <div className="flex items-start gap-2 p-3 font-data text-[16px]" style={{background:'rgba(52,211,153,0.05)',border:'1px solid rgba(52,211,153,0.18)',color:'#34d399'}}>
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                      <span>{result.message}</span>
-                    </div>
-                    {result.mse !== null && (
-                      <div className="grid grid-cols-2 gap-2">
-                        <StatBoxComponent label="MSE" value={result.mse.toFixed(4)} subtext="Mean Squared Error" color="text-[#fbbf24]" />
-                        <StatBoxComponent label="Status" value="Success" color="text-[#34d399]" />
-                      </div>
-                    )}
-                    <button onClick={handleOpenSummary} disabled={aiSummaryLoading || !timelineData}
-                      className="w-full py-2.5 font-data text-[16px] tracking-[0.18em] uppercase transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
-                      style={{background:'rgba(129,140,248,0.08)',border:'1px solid rgba(129,140,248,0.25)',color:'#818cf8'}}>
-                      {aiSummaryLoading
-                        ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Generating...</>
-                        : aiSummaryText
-                          ? <><Activity className="w-3.5 h-3.5" /> View AI Summary</>
-                          : <><Activity className="w-3.5 h-3.5" /> Generate AI Summary</>}
-                    </button>
-                    <p className="font-data text-[11px] lg:text-[13px] tracking-[0.12em] text-center" style={{color:'rgba(129,140,248,0.4)'}}>
-                      Optional · powered by Puter AI · sign-in required
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* SYSTEM INFO */}
-            <div className="overflow-hidden" style={{background:'#060f1c',border:'1px solid rgba(0,212,255,0.12)'}}>
-              <button onClick={() => toggleSection('about')} className="w-full px-4 py-3 flex items-center justify-between transition-colors"
-                style={{borderBottom:'1px solid rgba(0,212,255,0.1)',background:'rgba(4,12,20,0.6)'}}>
-                <div className="flex items-center gap-2.5">
-                  <Info className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.5)'}} />
-                  <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>System Info</span>
-                </div>
-                <ChevronDown className={`w-4 h-4 transition-transform ${openSections.includes('about') ? 'rotate-180' : ''}`} style={{color:'rgba(0,212,255,0.35)'}} />
-              </button>
-              {openSections.includes('about') && (
-                <div className="p-4 space-y-3 font-data text-[16px] leading-relaxed" style={{color:'rgba(0,212,255,0.4)'}}>
-                  <p>ConvLSTM neural network trained on global Sea Surface Temperature Anomaly (SSTa) data. Ingests 10 prior days and outputs the predicted anomaly map for the target date.</p>
-                  <div className="pt-3" style={{borderTop:'1px solid rgba(0,212,255,0.1)'}}>
-                    <div className="mb-1" style={{color:'rgba(0,212,255,0.55)'}}>// Error Map Key</div>
-                    <p>Positive (red) → over-predicted. Negative (blue) → under-predicted. Near-zero (white) → high accuracy.</p>
-                  </div>
-                </div>
-              )}
-            </div>
+          {/* ── RIGHT: INSTRUMENT PANEL (desktop side column) ─────── */}
+          <div className="hidden lg:flex lg:col-span-4 flex-col gap-3">
+            {panelSections}
           </div>
+
+          {/* ── CONFIG MODAL (mobile — opens on load) ─────────────── */}
+          {isConfigOpen && (
+            <div className="fixed inset-0 z-50 lg:hidden animate-in fade-in duration-200" style={{background:'#040c14'}}>
+              {/* Opaque backdrop — kept as a SEPARATE fixed layer with no
+                  scrolling child. iOS Safari fails to repaint the background of
+                  a position:fixed element that itself wraps an overflow scroller
+                  (the previously painted maps bleed through); a static backdrop
+                  with its own GPU layer always paints cleanly. minHeight:100lvh
+                  stretches it under the retracted Safari URL bar / toolbar. */}
+              <div className="absolute inset-0"
+                style={{
+                  background:'#040c14',
+                  minHeight:'100lvh',
+                  transform:'translateZ(0)',
+                  WebkitBackfaceVisibility:'hidden',
+                }} />
+              <div className="relative h-full flex flex-col"
+                style={{
+                  background:'#040c14',
+                  paddingTop:'calc(0.75rem + env(safe-area-inset-top))',
+                  paddingBottom:'calc(0.75rem + env(safe-area-inset-bottom))',
+                  paddingLeft:'calc(1rem + env(safe-area-inset-left))',
+                  paddingRight:'calc(1rem + env(safe-area-inset-right))',
+                }}>
+                {/* Modal header */}
+                <div className="flex items-center justify-between mb-3 shrink-0">
+                  <span className="font-data text-[16px] tracking-[0.22em] uppercase" style={{color:'rgba(0,212,255,0.5)'}}>Mission Control</span>
+                  <button onClick={() => setIsConfigOpen(false)} className="p-1.5 transition-colors" style={{border:'1px solid rgba(0,212,255,0.2)',color:'rgba(0,212,255,0.5)'}}>
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                {/* Scrollable content */}
+                <div className="flex-1 flex flex-col gap-3 overflow-y-auto min-h-0">
+                  {panelSections}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* ── AI SUMMARY MODAL ──────────────────────────────────── */}
           {isAiSummaryModalOpen && (
@@ -1073,6 +1113,26 @@ ${csvData}`;
             </div>
           )}
         </main>
+
+        {/* ── FOOTER ────────────────────────────────────────────────── */}
+        <footer className="border-t" style={{
+            background:'#040c14',
+            borderColor:'rgba(0,212,255,0.08)',
+            paddingBottom:'env(safe-area-inset-bottom)',
+          }}>
+          <div className="max-w-[1400px] mx-auto px-4 py-3 text-center font-data text-[10px] tracking-[0.18em] uppercase" style={{color:'rgba(0,212,255,0.2)'}}>
+            OceanAI SST · ConvLSTM SSTa v2 · © 2026
+          </div>
+        </footer>
+
+        <div aria-hidden="true" className="fixed left-0 right-0 z-[5] lg:hidden pointer-events-none"
+          style={{
+            bottom:'0',
+            height:'6px',
+            background:'#040c14',
+            backdropFilter:'saturate(100%)',
+            WebkitBackdropFilter:'saturate(100%)',
+          }} />
       </div>
   );
 }
