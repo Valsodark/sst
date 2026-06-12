@@ -119,7 +119,7 @@ export function DatePicker({ value, onChange, min, max }: { value: string; onCha
           {/* Weekday header */}
           <div className="grid grid-cols-7 mb-1">
             {WEEKDAYS.map(d => (
-              <div key={d} className="text-center text-[11px] tracking-wider uppercase py-1" style={{ color: 'rgba(0,212,255,0.3)' }}>
+              <div key={d} className="text-center text-[11px] tracking-wider uppercase py-1" style={{ color: 'rgba(0,212,255,0.82)' }}>
                 {d}
               </div>
             ))}
@@ -140,7 +140,7 @@ export function DatePicker({ value, onChange, min, max }: { value: string; onCha
                   onClick={() => pick(d)}
                   className="aspect-square flex items-center justify-center text-[14px] transition-colors"
                   style={{
-                    color: disabled ? 'rgba(0,212,255,0.12)' : isSel ? '#040c14' : inMonth ? '#d4eaf7' : 'rgba(0,212,255,0.2)',
+                    color: disabled ? 'rgba(0,212,255,0.35)' : isSel ? '#040c14' : inMonth ? '#d4eaf7' : 'rgba(0,212,255,0.62)',
                     background: isSel ? '#00d4ff' : 'transparent',
                     border: isToday && !isSel ? '1px solid rgba(0,212,255,0.4)' : '1px solid transparent',
                     cursor: disabled ? 'not-allowed' : 'pointer',

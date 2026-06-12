@@ -31,9 +31,9 @@ const DIFF_ENTRIES = [
 
 const DiffLegend = ({ horizontal = false }: { horizontal?: boolean }) => (
   <div className={`bg-[#09162a] border border-[#00d4ff]/12 p-2 font-data text-[16px] tracking-wider flex ${horizontal ? 'flex-row items-center justify-center gap-3 w-auto flex-wrap max-w-full' : 'flex-col justify-center gap-1 shrink-0 w-[100px]'}`}>
-    <div className={`text-[#00d4ff]/40 uppercase text-center ${horizontal ? 'pr-2 border-r border-[#00d4ff]/15' : 'mb-1 border-b border-[#00d4ff]/15 pb-1'}`}>Error</div>
+    <div className={`text-[#00d4ff]/90 uppercase text-center ${horizontal ? 'pr-2 border-r border-[#00d4ff]/15' : 'mb-1 border-b border-[#00d4ff]/15 pb-1'}`}>Error</div>
     {DIFF_ENTRIES.map(({ color, label }) => (
-      <div key={label} className="flex items-center gap-1.5 whitespace-nowrap text-[#a8c8e8]/60">
+      <div key={label} className="flex items-center gap-1.5 whitespace-nowrap text-[#a8c8e8]/85">
         <span className="w-2 h-2 shrink-0" style={{ backgroundColor: color }} />
         {label}
       </div>
@@ -586,7 +586,7 @@ ${csvData}`;
           style={{borderBottom:'1px solid rgba(0,212,255,0.1)',background:'#08111e'}}>
           <div className="flex items-center gap-2.5">
             <Settings className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.5)'}} />
-            <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>Parameters</span>
+            <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.92)'}}>Parameters</span>
           </div>
           <ChevronDown className={`w-4 h-4 transition-transform ${openSections.includes('controls') ? 'rotate-180' : ''}`} style={{color:'rgba(0,212,255,0.35)'}} />
         </button>
@@ -594,18 +594,18 @@ ${csvData}`;
           <div className="p-4">
             <form onSubmit={handlePredict} className="space-y-4">
               <div>
-                <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// API Endpoint</label>
+                <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.92)'}}>// API Endpoint</label>
                 <input type="text" value={apiUrl} onChange={e => setApiUrl(e.target.value)}
                   className="w-full px-3 py-2 font-data text-[16px] focus:outline-none"
                   style={{background:'#0a1628',border:'1px solid rgba(0,212,255,0.18)',color:'#d4eaf7'}}
                   placeholder="https://trimuerto-stta-app.hf.space" required disabled />
               </div>
               <div>
-                <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// Target Date</label>
+                <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.92)'}}>// Target Date</label>
                 <DatePicker value={targetDate} onChange={setTargetDate} min="2026-03-04" max="2026-03-18" />
               </div>
               <div>
-                <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.4)'}}>// Neural Model</label>
+                <label className="block font-data text-[16px] tracking-[0.28em] uppercase mb-1.5" style={{color:'rgba(0,212,255,0.92)'}}>// Neural Model</label>
                 <div className="relative">
                   <select value={selectedModel} onChange={e => setSelectedModel(e.target.value)}
                     className="w-full pl-3 pr-9 py-2 font-data text-[16px] focus:outline-none"
@@ -641,7 +641,7 @@ ${csvData}`;
             style={{borderBottom:'1px solid rgba(0,212,255,0.1)',background:'#08111e'}}>
             <div className="flex items-center gap-2.5">
               <Activity className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.5)'}} />
-              <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>Analysis Results</span>
+              <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.92)'}}>Analysis Results</span>
             </div>
             <ChevronDown className={`w-4 h-4 transition-transform ${openSections.includes('metrics') ? 'rotate-180' : ''}`} style={{color:'rgba(0,212,255,0.35)'}} />
           </button>
@@ -666,7 +666,7 @@ ${csvData}`;
                     ? <><Activity className="w-3.5 h-3.5" /> View AI Summary</>
                     : <><Activity className="w-3.5 h-3.5" /> Generate AI Summary</>}
               </button>
-              <p className="font-data text-[11px] lg:text-[13px] tracking-[0.12em] text-center" style={{color:'rgba(129,140,248,0.4)'}}>
+              <p className="font-data text-[11px] lg:text-[13px] tracking-[0.12em] text-center" style={{color:'rgba(129,140,248,0.85)'}}>
                 Optional · powered by Puter AI · sign-in required
               </p>
             </div>
@@ -679,16 +679,16 @@ ${csvData}`;
         <button onClick={() => toggleSection('about')} className="w-full px-4 py-3 flex items-center justify-between transition-colors"
           style={{borderBottom:'1px solid rgba(0,212,255,0.1)',background:'#08111e'}}>
           <div className="flex items-center gap-2.5">
-            <Info className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.5)'}} />
-            <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.7)'}}>System Info</span>
+            <Info className="w-3.5 h-3.5" style={{color:'rgba(0,212,255,0.7)'}} />
+            <span className="font-data text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.92)'}}>System Info</span>
           </div>
           <ChevronDown className={`w-4 h-4 transition-transform ${openSections.includes('about') ? 'rotate-180' : ''}`} style={{color:'rgba(0,212,255,0.35)'}} />
         </button>
         {openSections.includes('about') && (
-          <div className="p-4 space-y-3 font-data text-[16px] leading-relaxed" style={{color:'rgba(0,212,255,0.4)'}}>
+          <div className="p-4 space-y-3 font-data text-[16px] leading-relaxed" style={{color:'rgba(168,210,235,0.96)'}}>
             <p>ConvLSTM neural network trained on global Sea Surface Temperature Anomaly (SSTa) data. Ingests 10 prior days and outputs the predicted anomaly map for the target date.</p>
             <div className="pt-3" style={{borderTop:'1px solid rgba(0,212,255,0.1)'}}>
-              <div className="mb-1" style={{color:'rgba(0,212,255,0.55)'}}>// Error Map Key</div>
+              <div className="mb-1" style={{color:'rgba(0,212,255,0.92)'}}>// Error Map Key</div>
               <p>Positive (red) → over-predicted. Negative (blue) → under-predicted. Near-zero (white) → high accuracy.</p>
             </div>
           </div>
@@ -719,19 +719,19 @@ ${csvData}`;
                 <div className="text-sm font-bold tracking-[0.12em]" style={{color:'#d4eaf7'}}>
                   Ocean<span style={{color:'#00d4ff'}}>AI</span>
                 </div>
-                <div className="font-data text-[9px] tracking-[0.22em] uppercase" style={{color:'rgba(0,212,255,0.4)'}}>
+                <div className="font-data text-[9px] tracking-[0.22em] uppercase" style={{color:'rgba(0,212,255,0.85)'}}>
                   ConvLSTM SSTa v2
                 </div>
               </div>
             </div>
 
             {/* Center readout */}
-            <div className="hidden md:flex items-center gap-6 font-data text-[10px] tracking-[0.18em] uppercase" style={{color:'rgba(0,212,255,0.35)'}}>
+            <div className="hidden md:flex items-center gap-6 font-data text-[10px] tracking-[0.18em] uppercase" style={{color:'rgba(0,212,255,0.82)'}}>
               {result ? (
                 <>
-                  <span style={{color:'rgba(0,212,255,0.55)'}}>DATE: {result.target_date}</span>
+                  <span style={{color:'rgba(0,212,255,0.82)'}}>DATE: {result.target_date}</span>
                   {result.mse !== null && <span>MSE: {result.mse.toFixed(4)}</span>}
-                  <span style={{color:'rgba(52,211,153,0.6)'}}>■ DATA LOADED</span>
+                  <span style={{color:'rgba(52,211,153,0.88)'}}>■ DATA LOADED</span>
                 </>
               ) : <span>■ AWAITING PARAMETERS</span>}
             </div>
@@ -742,7 +742,7 @@ ${csvData}`;
                 style={{
                   border: `1px solid ${isLoading ? 'rgba(251,191,36,0.3)' : result ? 'rgba(0,212,255,0.25)' : 'rgba(100,140,170,0.2)'}`,
                   background: isLoading ? 'rgba(251,191,36,0.04)' : result ? 'rgba(0,212,255,0.05)' : 'rgba(100,140,170,0.03)',
-                  color: isLoading ? '#fbbf24' : result ? '#00d4ff' : 'rgba(100,140,170,0.5)',
+                  color: isLoading ? '#fbbf24' : result ? '#00d4ff' : 'rgba(130,165,195,0.85)',
                 }}>
                 <div className="w-1.5 h-1.5 rounded-full" style={{
                   background: isLoading ? '#fbbf24' : result ? '#00d4ff' : 'rgba(100,140,170,0.4)',
@@ -776,7 +776,7 @@ ${csvData}`;
                     <div className="w-1 h-4" style={{background:'rgba(0,212,255,0.35)'}} />
                     <div className="w-1 h-4" style={{background:'rgba(0,212,255,0.15)'}} />
                   </div>
-                  <span className="font-data text-[11px] lg:text-[16px] tracking-[0.22em] uppercase" style={{color:'rgba(0,212,255,0.65)'}}>
+                  <span className="font-data text-[11px] lg:text-[16px] tracking-[0.22em] uppercase" style={{color:'rgba(0,212,255,0.88)'}}>
                     View Forecasted SSTAs
                   </span>
                 </div>
@@ -800,7 +800,7 @@ ${csvData}`;
                       <div className="absolute inset-0 rounded-full" style={{border:'1px solid rgba(0,212,255,0.4)',animation:'sonar-ping 1.4s ease-out infinite'}} />
                       <div className="absolute inset-0 rounded-full" style={{border:'1px solid rgba(0,212,255,0.25)',animation:'sonar-ping 1.4s ease-out 0.7s infinite'}} />
                     </div>
-                    <div className="font-data text-[16px] tracking-[0.3em] uppercase text-center" style={{color:'rgba(0,212,255,0.4)',animation:'pulse 2s ease-in-out infinite'}}>
+                    <div className="font-data text-[16px] tracking-[0.3em] uppercase text-center" style={{color:'rgba(0,212,255,0.92)',animation:'pulse 2s ease-in-out infinite'}}>
                       Neural Model Processing...
                     </div>
                   </div>
@@ -819,8 +819,8 @@ ${csvData}`;
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="font-data text-[16px] tracking-[0.25em] uppercase" style={{color:'rgba(0,212,255,0.3)'}}>Awaiting Parameters</div>
-                      <div className="font-data text-[16px] mt-1" style={{color:'rgba(0,212,255,0.15)'}}>Configure date and model then execute prediction</div>
+                      <div className="font-data text-[16px] tracking-[0.25em] uppercase" style={{color:'rgba(0,212,255,0.88)'}}>Awaiting Parameters</div>
+                      <div className="font-data text-[16px] mt-1" style={{color:'rgba(0,212,255,0.72)'}}>Configure date and model then execute prediction</div>
                     </div>
                   </div>
                 ) : currentMap ? (
@@ -830,7 +830,7 @@ ${csvData}`;
                       {timeStep < 10 ? (
                         <div className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 rounded-full" style={{background:'#00d4ff'}} />
-                          <span className="font-data text-[11px] lg:text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.6)'}}>
+                          <span className="font-data text-[11px] lg:text-[16px] tracking-[0.2em] uppercase" style={{color:'rgba(0,212,255,0.88)'}}>
                             Input Sequence — Day {timeStep + 1} / 10
                           </span>
                         </div>
@@ -870,7 +870,7 @@ ${csvData}`;
                           {timeStep < 10 ? `IN-D${String(timeStep+1).padStart(2,'0')}` : predictionView.slice(0,4).toUpperCase()}
                         </div>
                         {(!result.actual && timeStep === 10 && predictionView === 'actual') || (!result.difference && timeStep === 10 && predictionView === 'difference') ? (
-                          <div className="w-full h-full flex items-center justify-center font-data text-[16px] tracking-widest uppercase" style={{color:'rgba(0,212,255,0.2)'}}>No Data Available</div>
+                          <div className="w-full h-full flex items-center justify-center font-data text-[16px] tracking-widest uppercase" style={{color:'rgba(0,212,255,0.75)'}}>No Data Available</div>
                         ) : (
                           <>
                             {isViewTransitioning && (
@@ -908,20 +908,20 @@ ${csvData}`;
               {result && (
                 <div className="px-4 py-3" style={{borderTop:'1px solid rgba(0,212,255,0.1)',background:'rgba(4,12,20,0.8)'}}>
                   <div className="flex items-center justify-between mb-2.5">
-                    <span className="font-data text-[11px] lg:text-[16px] tracking-[0.28em] uppercase" style={{color:'rgba(0,212,255,0.35)'}}>Temporal Navigation</span>
+                    <span className="font-data text-[11px] lg:text-[16px] tracking-[0.28em] uppercase" style={{color:'rgba(0,212,255,0.88)'}}>Temporal Navigation</span>
                     <button
                       onClick={() => { if (!isPlaying && timeStep >= 10) setTimeStep(0); setIsPlaying(!isPlaying); }}
                       className="flex items-center gap-1.5 font-data text-[11px] lg:text-[16px] tracking-[0.2em] uppercase px-2.5 py-1 transition-all"
-                      style={{border:'1px solid rgba(0,212,255,0.18)',color:'rgba(0,212,255,0.55)'}}>
+                      style={{border:'1px solid rgba(0,212,255,0.18)',color:'rgba(0,212,255,0.82)'}}>
                       {isPlaying ? <><Pause className="w-3 h-3" /> Halt</> : <><Play className="w-3 h-3" /> Sequence</>}
                     </button>
                   </div>
                   <input type="range" min="0" max="10" value={timeStep}
                     onChange={(e) => { setTimeStep(parseInt(e.target.value)); setIsPlaying(false); }}
                     className="w-full" />
-                  <div className="flex justify-between font-data text-[11px] lg:text-[16px] mt-1.5" style={{color:'rgba(0,212,255,0.25)'}}>
+                  <div className="flex justify-between font-data text-[11px] lg:text-[16px] mt-1.5" style={{color:'rgba(0,212,255,0.8)'}}>
                     <span>D01</span><span>D05</span><span>D10</span>
-                    <span style={{color:'rgba(129,140,248,0.45)'}}>PRED</span>
+                    <span style={{color:'rgba(129,140,248,0.92)'}}>PRED</span>
                   </div>
                 </div>
               )}
@@ -944,7 +944,7 @@ ${csvData}`;
                         <MapCanvas data={sd} width={result.width} height={result.height} minTemp={min} maxTemp={max}
                           cmap={sc} animateTransition={false} onClick={() => setFullScreenMap(key as any)} />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center font-data text-[16px] tracking-widest uppercase" style={{color:'rgba(0,212,255,0.15)'}}>N/A</div>
+                        <div className="w-full h-full flex items-center justify-center font-data text-[16px] tracking-widest uppercase" style={{color:'rgba(0,212,255,0.72)'}}>N/A</div>
                       )}
                     </div>
                   </div>
@@ -984,7 +984,7 @@ ${csvData}`;
                 }}>
                 {/* Modal header */}
                 <div className="flex items-center justify-between mb-3 shrink-0">
-                  <span className="font-data text-[16px] tracking-[0.22em] uppercase" style={{color:'rgba(0,212,255,0.5)'}}>Mission Control</span>
+                  <span className="font-data text-[16px] tracking-[0.22em] uppercase" style={{color:'rgba(0,212,255,0.92)'}}>Mission Control</span>
                   <button onClick={() => setIsConfigOpen(false)} className="p-1.5 transition-colors" style={{border:'1px solid rgba(0,212,255,0.2)',color:'rgba(0,212,255,0.5)'}}>
                     <X className="w-4 h-4" />
                   </button>
@@ -1020,7 +1020,7 @@ ${csvData}`;
                         <div className="absolute inset-0 rounded-full" style={{border:'1px solid rgba(129,140,248,0.15)'}} />
                         <div className="absolute inset-0 rounded-full" style={{border:'1px solid transparent',borderTopColor:'rgba(129,140,248,0.6)',animation:'spin-slow 1.4s linear infinite'}} />
                       </div>
-                      <div className="font-data text-[16px] tracking-[0.3em] uppercase" style={{color:'rgba(129,140,248,0.4)',animation:'pulse 2s ease-in-out infinite'}}>
+                      <div className="font-data text-[16px] tracking-[0.3em] uppercase" style={{color:'rgba(129,140,248,0.78)',animation:'pulse 2s ease-in-out infinite'}}>
                         Analyzing basin data...
                       </div>
                     </div>
@@ -1033,7 +1033,7 @@ ${csvData}`;
                       </div>
                     </div>
                   ) : aiSummaryText ? (
-                    <div className="space-y-2 text-[16px] leading-relaxed" style={{color:'rgba(212,234,247,0.75)'}}>
+                    <div className="space-y-2 text-[16px] leading-relaxed" style={{color:'rgba(212,234,247,0.97)'}}>
                       {aiSummaryText.split('\n').map((line, i) => {
                         if (line.startsWith('#')) {
                           const text = line.replace(/^#+\s/, '');
@@ -1091,10 +1091,10 @@ ${csvData}`;
                   {fullScreenMapProps.showTimeline && result && (
                     <div className="w-full max-w-4xl p-3" style={{border:'1px solid rgba(0,212,255,0.1)',background:'rgba(4,12,20,0.92)',backdropFilter:'blur(8px)'}}>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-data text-[11px] lg:text-[16px] tracking-[0.28em] uppercase" style={{color:'rgba(0,212,255,0.35)'}}>Timeline</span>
+                        <span className="font-data text-[11px] lg:text-[16px] tracking-[0.28em] uppercase" style={{color:'rgba(0,212,255,0.88)'}}>Timeline</span>
                         <button onClick={() => { if (!isPlaying && timeStep >= 10) setTimeStep(0); setIsPlaying(!isPlaying); }}
                           className="flex items-center gap-1.5 font-data text-[11px] lg:text-[16px] tracking-[0.2em] uppercase px-2.5 py-1 transition-all"
-                          style={{border:'1px solid rgba(0,212,255,0.18)',color:'rgba(0,212,255,0.55)'}}>
+                          style={{border:'1px solid rgba(0,212,255,0.18)',color:'rgba(0,212,255,0.82)'}}>
                           {isPlaying ? <><Pause className="w-3 h-3" /> Halt</> : <><Play className="w-3 h-3" /> Play</>}
                         </button>
                       </div>
@@ -1102,7 +1102,7 @@ ${csvData}`;
                         <input type="range" min={0} max={10} step={1} value={timeStep}
                           onChange={e => { setTimeStep(parseInt(e.target.value)); setIsPlaying(false); }}
                           className="flex-1" />
-                        <div className="font-data text-[16px] min-w-[56px] text-right" style={{color:'rgba(0,212,255,0.45)'}}>
+                        <div className="font-data text-[16px] min-w-[56px] text-right" style={{color:'rgba(0,212,255,0.88)'}}>
                           {timeStep === 10 ? (predictionView === 'actual' ? 'TRUTH' : predictionView === 'difference' ? 'DIFF' : 'PRED') : `D${String(timeStep+1).padStart(2,'0')}`}
                         </div>
                       </div>
@@ -1120,7 +1120,7 @@ ${csvData}`;
             borderColor:'rgba(0,212,255,0.08)',
             paddingBottom:'env(safe-area-inset-bottom)',
           }}>
-          <div className="max-w-[1400px] mx-auto px-4 py-3 text-center font-data text-[10px] tracking-[0.18em] uppercase" style={{color:'rgba(0,212,255,0.2)'}}>
+          <div className="max-w-[1400px] mx-auto px-4 py-3 text-center font-data text-[10px] tracking-[0.18em] uppercase" style={{color:'rgba(0,212,255,0.65)'}}>
             OceanAI SST · ConvLSTM SSTa v2 · © 2026
           </div>
         </footer>
